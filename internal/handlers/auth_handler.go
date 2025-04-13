@@ -15,6 +15,17 @@ func NewAuthHandler(authService *services.AuthService) *AuthHandler {
 	return &AuthHandler{authService: authService}
 }
 
+// Register handles user registration
+// @Summary Register a new user
+// @Description Creates a new user account with the specified username, password, and role.
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param user body object{username=string,password=string,role=string} true "User registration data"
+// @Success 201 {object} object{user=object{id=int,username=string,role=string,created_at=string}}
+// @Failure 400 {object} object{error=string}
+// @Router /register [post]
+
 func (h *AuthHandler) Register(c *gin.Context) {
 	var input struct {
 		Username string `json:"username" binding:"required"`
@@ -35,6 +46,18 @@ func (h *AuthHandler) Register(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"user": user})
 }
+
+// Login handles user login
+// @Summary Login a user
+// @Description Authenticates a user and returns a JWT token.
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param credentials body object{username=string,password=string} true "User login credentials"
+// @Success 200 {object} object{token=string}
+// @Failure 400 {object} object{error=string}
+// @Failure 401 {object} object{error=string}
+// @Router /login [post]
 
 func (h *AuthHandler) Login(c *gin.Context) {
 	var input struct {
